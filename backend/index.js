@@ -1,7 +1,7 @@
-import express, { request, response } from "express";
+import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
-import { Book } from "./models/bookModel.js";
+import booksRouter from "./routes/books.js";
 
 const app = express();
 
@@ -11,47 +11,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.post("/books", async (req, res) => {
-  console.log(req.body);
-  try {
-    if (!req.body.title || !req.body.author || !req.body.publishYear) {
-      res.status(400).send({ message: "Invalid Input" });
-    } else {
-      const { title, author, publishYear } = req.body;
-      const newBook = { title, author, publishYear };
-      const book = await Book.create(newBook);
-      res.status(201).send(book);
-    }
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
-  }
-});
-
-app.get("/books", async (req, res) => {
-  try {
-    const books = await Book.find();
-    res.status(200).send({
-      count: books.length,
-      books,
-    });
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
-  }
-});
-
-app.get("/books/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const book = await Book.findById(id);
-    res.status(200).send(book);
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).send({ message: err.message });
-  }
-});
-
+app.use('/books', booksRouter);
 mongoose
   .connect(mongoDBURL)
   .then(() => {
