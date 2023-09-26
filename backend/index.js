@@ -8,15 +8,15 @@ const app = express();
 
 app.use(express.json());
 
-// app.use(cors()); //allow everything
+app.use(cors()); //allow everything
 
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST", "DELETE"],
-    allowedHeaders: ["Content-Type"],
-  })
-); //allow specific
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     methods: ["GET", "POST", "DELETE"],
+//     allowedHeaders: ["Content-Type"],
+//   })
+// ); //allow specific
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
